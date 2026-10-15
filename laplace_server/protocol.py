@@ -8,6 +8,7 @@ clients and servers.
 It acts as the single source of truth for the communication protocol,
 ensuring consistency across the project.
 '''
+from typing import Callable
 
 # protocol version
 PROTOCOL_VERSION = "0.2.1.1"
@@ -64,7 +65,7 @@ def make_message(*,
     }
     return message
 
-def make_ping(sender: str, target: str):
+def make_ping(sender: str, target: str) -> dict:
     return make_message(
         cmd=CMD_PING,
         sender=sender,
@@ -73,7 +74,7 @@ def make_ping(sender: str, target: str):
         msg="Alive?"
     )
 
-def make_pong(sender: str, target: str):
+def make_pong(sender: str, target: str) -> dict:
     return make_message(
         cmd=CMD_PING,
         sender=sender,
@@ -82,7 +83,7 @@ def make_pong(sender: str, target: str):
         msg="Still alive."
     )
 
-def make_info_request(sender: str, target: str):
+def make_info_request(sender: str, target: str) -> dict:
     return make_message(
         cmd=CMD_INFO,
         sender=sender,
@@ -90,7 +91,16 @@ def make_info_request(sender: str, target: str):
         msg="Informations required."
     )
 
-def make_info_reply(sender: str, target: str, *, device, freedom, name, capabilities, callbacks, name_list=[], plottables_list=[]):
+def make_info_reply(sender: str, 
+                    target: str, 
+                    *, 
+                    device: str, 
+                    freedom: int, 
+                    name: str, 
+                    capabilities: list[str], 
+                    callbacks: list[Callable | None], 
+                    name_list: list[str] = [], 
+                    plottables_list=[]) -> dict:
     return make_message(
         cmd=CMD_INFO,
         sender=sender,
@@ -107,7 +117,7 @@ def make_info_reply(sender: str, target: str, *, device, freedom, name, capabili
         msg="Informations transmitted."
     )
 
-def make_get_request(sender: str, target: str):
+def make_get_request(sender: str, target: str)  -> dict:
     return make_message(
         cmd=CMD_GET,
         sender=sender,
@@ -115,7 +125,10 @@ def make_get_request(sender: str, target: str):
         msg="Get values."
     )
 
-def make_get_reply(sender: str, target: str, *, data: dict):
+def make_get_reply(sender: str, 
+                   target: str, 
+                   *, 
+                   data: dict) -> dict:
     return make_message(
         cmd=CMD_GET,
         sender=sender,
@@ -124,7 +137,10 @@ def make_get_reply(sender: str, target: str, *, data: dict):
         msg="Data sent."
     )
 
-def make_save_request(sender: str, target: str, *, path: str):
+def make_save_request(sender: str, 
+                      target: str, 
+                      *, 
+                      path: str) -> dict:
     return make_message(
         cmd=CMD_SAVE,
         sender=sender,
@@ -134,7 +150,7 @@ def make_save_request(sender: str, target: str, *, path: str):
     )
 
 
-def make_save_reply(sender: str, target: str):
+def make_save_reply(sender: str, target: str) -> dict:
     return make_message(
         cmd=CMD_SAVE,
         sender=sender,
@@ -142,7 +158,10 @@ def make_save_reply(sender: str, target: str):
         msg="Saving path changed."
     )
 
-def make_toggle_saving_status_request(sender: str, target: str, *, saving_status: bool):
+def make_toggle_saving_status_request(sender: str, 
+                                      target: str, 
+                                      *, 
+                                      saving_status: bool) -> dict:
     return make_message(
         cmd=CMD_TOGGLE_SAVING,
         sender=sender,
@@ -151,7 +170,7 @@ def make_toggle_saving_status_request(sender: str, target: str, *, saving_status
         msg="Toggle saving status request."
     )
 
-def make_toggle_saving_status_reply(sender: str, target: str):
+def make_toggle_saving_status_reply(sender: str, target: str) -> dict:
     return make_message(
         cmd=CMD_TOGGLE_SAVING,
         sender=sender,
@@ -159,7 +178,11 @@ def make_toggle_saving_status_reply(sender: str, target: str):
         msg="Saving status toggled."
     )
 
-def make_error(sender: str, target: str, *, cmd: str, error_msg: str):
+def make_error(sender: str, 
+               target: str, 
+               *, 
+               cmd: str, 
+               error_msg: str) -> dict:
     return make_message(
         cmd=cmd,
         sender=sender,
@@ -168,7 +191,7 @@ def make_error(sender: str, target: str, *, cmd: str, error_msg: str):
         msg="Error encountered."
     )
 
-def make_stop(sender: str, target: str):
+def make_stop(sender: str, target: str) -> dict:
     return make_message(
         cmd=CMD_STOP,
         sender=sender,
@@ -176,7 +199,7 @@ def make_stop(sender: str, target: str):
         msg="Shutdown request."
     )
 
-def make_stop_reply(sender: str, target: str):
+def make_stop_reply(sender: str, target: str) -> dict:
     return make_message(
         cmd=CMD_STOP,
         sender=sender,
@@ -184,7 +207,10 @@ def make_stop_reply(sender: str, target: str):
         msg="Server stopping."
     )
 
-def make_set_request(sender: str, target: str, *, positions: list):
+def make_set_request(sender: str, 
+                     target: str, 
+                     *, 
+                     positions: list) -> dict:
     return make_message(
         cmd=CMD_SET,
         sender=sender,
@@ -195,7 +221,7 @@ def make_set_request(sender: str, target: str, *, positions: list):
         msg="Set request."
     )
 
-def make_set_reply(sender: str, target: str):
+def make_set_reply(sender: str, target: str) -> dict:
     return make_message(
         cmd=CMD_SET,
         sender=sender,
@@ -203,7 +229,10 @@ def make_set_reply(sender: str, target: str):
         msg="Positions updated."
     )
 
-def make_opt_update(sender: str, target: str, *, data: dict):
+def make_opt_update(sender: str, 
+                    target: str, 
+                    *, 
+                    data: dict) -> dict:
     return make_message(
         cmd=CMD_OPT,
         sender=sender,
@@ -212,9 +241,7 @@ def make_opt_update(sender: str, target: str, *, data: dict):
         msg="Opt informations."
     )
 
-
-
-def make_opt_reply(sender: str, target: str):
+def make_opt_reply(sender: str, target: str) -> dict:
     return make_message(
         cmd=CMD_OPT,
         sender=sender,
@@ -222,7 +249,10 @@ def make_opt_reply(sender: str, target: str):
         msg="Updating opt."
     )
 
-def make_scan_update(sender: str, target: str, *, data: dict):
+def make_scan_update(sender: str, 
+                     target: str, 
+                     *, 
+                     data: dict) -> dict:
     return make_message(
         cmd=CMD_SCAN,
         sender=sender,
@@ -231,7 +261,7 @@ def make_scan_update(sender: str, target: str, *, data: dict):
         msg="Scan informations."
     )
 
-def make_scan_reply(sender: str, target: str):
+def make_scan_reply(sender: str, target: str) -> dict:
     return make_message(
         cmd=CMD_SCAN,
         sender=sender,
@@ -239,7 +269,9 @@ def make_scan_reply(sender: str, target: str):
         msg="Updating scan"
     )
 
-def make_set_actuators(sender: str, target: str, actuators: dict):
+def make_set_actuators(sender: str, 
+                       target: str, 
+                       actuators: dict) -> dict:
     return make_message(
         cmd=CMD_SET_ACT,
         sender=sender,
@@ -248,7 +280,9 @@ def make_set_actuators(sender: str, target: str, actuators: dict):
         msg="Setting actuators"
     )
 
-def make_set_diagnostics(sender: str, target: str, diagnostics: dict):
+def make_set_diagnostics(sender: str, 
+                         target: str, 
+                         diagnostics: dict) -> dict:
     return make_message(
         cmd=CMD_SET_DIAG,
         sender=sender,
@@ -257,7 +291,7 @@ def make_set_diagnostics(sender: str, target: str, diagnostics: dict):
         msg="Setting actuators"
     )
 
-def make_set_actuators_reply(sender: str, target: str):
+def make_set_actuators_reply(sender: str, target: str) -> dict:
     return make_message(
         cmd=CMD_SET_ACT,
         sender=sender,
@@ -265,7 +299,7 @@ def make_set_actuators_reply(sender: str, target: str):
         msg="Actuators set on scanners"
     )
 
-def make_set_diagnostics_reply(sender: str, target: str):
+def make_set_diagnostics_reply(sender: str, target: str) -> dict:
     return make_message(
         cmd=CMD_SET_DIAG,
         sender=sender,
@@ -273,7 +307,9 @@ def make_set_diagnostics_reply(sender: str, target: str):
         msg="Diagnostics set on scanners"
     )
 
-def make_scan_act_position_update(sender: str, target: str, data: dict):
+def make_scan_act_position_update(sender: str, 
+                                  target: str, 
+                                  data: dict) -> dict:
     return make_message(
         cmd=CMD_UPDATE_ACTUATORS_POS,
         sender=sender,
@@ -282,7 +318,7 @@ def make_scan_act_position_update(sender: str, target: str, data: dict):
         msg="Updating current actuators positions"
     )
 
-def make_scan_act_position_reply(sender: str, target: str):
+def make_scan_act_position_reply(sender: str, target: str) -> dict:
     return make_message(
         cmd=CMD_UPDATE_ACTUATORS_POS,
         sender=sender,
