@@ -1,6 +1,6 @@
 # LAPLACE Server (LAPLACE-LHC)
 
-ZMQ-based server for the **LAPLACE-LHC** project.
+Server for the **LAPLACE** project.
 
 This package provides a lightweight, command-driven server running in its own
 thread, designed to exchange structured messages with clients using a defined
