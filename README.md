@@ -178,7 +178,7 @@ laplace_server/
 - `laplace_server.__version__`
   Package release version (matches the PyPI version).
 
-- `laplace_server..protocol.PROTOCOL_VERSION`
+- `laplace_server.protocol.PROTOCOL_VERSION`
   Internal communication protocol version, used to validate messages and ensure
   compatibility between clients and servers.
 
