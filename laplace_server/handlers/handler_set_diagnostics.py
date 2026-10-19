@@ -1,4 +1,10 @@
 # libraries
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from laplace_server import ServerLHC
+
 import logging
 
 # project
@@ -11,7 +17,7 @@ from ..validations import validate_payload
 log = logging.getLogger(LOGGER_NAME)
 
 
-def handle_set_diagnostics(server, message: dict, target: str) -> None:
+def handle_set_diagnostics(server: ServerLHC, message: dict, target: str) -> None:
     log.debug(f"[Server {server.name}] Received: '{CMD_SET_DIAG}' from '{target}'")
     err = validate_payload(message, expected_keys=["diagnostics"])
     if err:

@@ -6,7 +6,6 @@ ready-to-use signals corresponding to server events. It allows a ServerLHC
 instance to emit PyQt6 signals via simple callback methods, without requiring
 the server itself to inherit from QObject.
 '''
-
 # libraries
 try:
     from PyQt6.QtCore import QObject, pyqtSignal
@@ -68,4 +67,3 @@ class ServerController(QObject):
     def on_new_actuator_pos_received(self, actuators: dict)-> None:
         '''Emits an 'actuators' dictionary with available actuators'''
         self.actuators_pos_update_received.emit(actuators)
-        print(f'Signal on new position received')

@@ -1,4 +1,10 @@
 # libraries
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from laplace_server import ServerLHC
+
 import logging
 
 # project
@@ -7,7 +13,7 @@ from ..protocol import make_info_reply, CMD_INFO, LOGGER_NAME
 log = logging.getLogger(LOGGER_NAME)
 
 
-def handle_info(server, message, target):
+def handle_info(server: ServerLHC, message: dict, target: str):
     log.debug(f"[Server {server.name}] Received: '{CMD_INFO}' from '{target}'.")
     response = make_info_reply(
         sender=server.name,
@@ -16,7 +22,6 @@ def handle_info(server, message, target):
         freedom=server.freedom,
         name=server.name,
         capabilities=server.capabilities,
-        callbacks=server.callable_list,
         name_list=server.name_list,
         plottables_list=server.plottables_list
     )

@@ -6,7 +6,6 @@ server configuration parameters and incoming protocol messages.
 Each function returns a human-readable error message or None if the
 validation succeeds.
 '''
-
 # libraries
 import logging
 

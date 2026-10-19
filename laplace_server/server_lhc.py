@@ -10,7 +10,6 @@ The server is designed to remain independent from GUI frameworks
 (e.g. PyQt), while still allowing integration through callback-based
 controllers.
 '''
-
 # libraries
 import json
 import logging
@@ -22,6 +21,7 @@ from typing import Callable
 import zmq
 
 # project
+from .get_ip import get_ip
 from .protocol import (
     CMD_INFO, CMD_PING, CMD_GET, CMD_SCAN,
     CMD_SET, CMD_SAVE, CMD_OPT, CMD_STOP, 
@@ -29,14 +29,13 @@ from .protocol import (
     CMD_SET_DIAG,
     make_error, make_stop,
     AVAILABLE_DEVICES,
-    LOGGER_NAME
+    LOGGER_NAME,
 )
 from .validations import(
     validate_device, validate_freedom, 
     validate_address, validate_message
 )
 from . import handlers
-
 
 log = logging.getLogger(LOGGER_NAME)
 
@@ -45,8 +44,8 @@ class ServerLHC(threading.Thread):
     f'''
     Server made for the LAPLACE-LHC project.
 
-    The server runs in its own thread and communicates using the ZMQ REP/REQ
-    pattern.
+    The server runs in its own non-deamon thread and communicates 
+    using the ZMQ REP/REQ pattern.
 
     Basic usage:
         serv = ServerLHC(name, ...)
@@ -61,9 +60,7 @@ class ServerLHC(threading.Thread):
     Warning:
         The server runs in a non-daemon thread and must be stopped explicitly
         using 'stop()' to allow the Python process to exit cleanly.
-
     '''
-
     def __init__(
             self,
             name: str,
@@ -74,45 +71,49 @@ class ServerLHC(threading.Thread):
             empty_data_after_get: bool = False,
             time_poll_ms: int = 100,
             time_sleep_ms: float = 10, 
-            plottables_list: list = []
+            name_list: list[str] = [],
+            plottables_list: list[str] = [],
         ):
         f'''
-            Args:
-                name: (str)
-                    the server name.
-                
-                address: (str)
-                    the server address. 
-                    The format must be "tcp://'IP to listen':'port'", with:
-                        'tcp://' being the imposed protocol, 
-                        'IP to listen' the IP address the server should listen 
-                        or '*' (equivalent to 0.0.0.0) to listen every IP.
-                
-                freedom: (int)
-                    the degree of freedom of the associated device.
-                    (Number of motors the server should drive, 0 for camera)
-                
-                device: (str)
-                    the device associated to the server.
-                    Among: {AVAILABLE_DEVICES}.
+        Args:
+            name (str):
+                the server name.
+            
+            address (str):
+                the server address. 
+                The format must be "tcp://'IP to listen':'port'", with:
+                    'tcp://' being the imposed protocol, 
+                    'IP to listen' the IP address the server should listen 
+                    or '*' (equivalent to 0.0.0.0) to listen every IP.
+            
+            freedom (int):
+                the degree of freedom of the associated device.
+                (Number of motors the server should drive, 0 for camera)
+            
+            device (str):
+                the device associated to the server.
+                Among: {AVAILABLE_DEVICES}.
 
-                data: (dict)
-                    Initial dictionary stored by the server and transmitted on 'CMD_GET'.
-                    The data can be updated later using the 'set_data()' method.
-                
-                empty_data_after_get: (bool)
-                    whether to empty the data dictionary stored in the server
-                    after transmission through 'CMD_GET'. (default {False})
-                
-                time_poll_ms: (int)
-                    The timeout (in milliseconds) to wait for an event. 
-                
-                time_sleep_ms: (float)
-                    Delay execution between 2 polling cylces for a given number of milliseconds. 
-                    The argument may be a floating point number for subsecond precision.
+            data (dict):
+                Initial dictionary stored by the server and transmitted on 'CMD_GET'.
+                The data can be updated later using the 'set_data()' method.
+            
+            empty_data_after_get (bool):
+                whether to empty the data dictionary stored in the server
+                after transmission through 'CMD_GET'. (default {False})
+            
+            time_poll_ms: (int)
+                The timeout (in milliseconds) to wait for an event. 
+            
+            time_sleep_ms: (float)
+                Delay execution between 2 polling cylces for a given number of milliseconds. 
+                The argument may be a floating point number for subsecond precision.
+            
+            name_list, plottables_list (list[str]):
+                List of the deviced belonging to this server and name of the plottables
+                transmitted trhough this server respectively.
         '''
-        
-        super().__init__() # heritage from Thread
+        super().__init__() # inheritance from Thread
         
         # checking format
         validate_address(address)
@@ -136,7 +137,7 @@ class ServerLHC(threading.Thread):
         self.time_poll_ms = time_poll_ms
         self.time_sleep_ms = time_sleep_ms
 
-        self.name_list = [] # the list of device name belonging to this server
+        self.name_list = name_list
         self.plottables_list = plottables_list
 
         # server context
@@ -144,7 +145,7 @@ class ServerLHC(threading.Thread):
         self.socket = self.context.socket(zmq.REP)
         self.socket.bind(self._address)
 
-        self._server_ip = self.get_ip() # get the server IP
+        self._server_ip = get_ip(name=self.name)  # get the server IP
 
         self.capabilities = [
             CMD_INFO, CMD_PING, CMD_GET, 
@@ -177,44 +178,7 @@ class ServerLHC(threading.Thread):
         self.on_update_actuator_positions = None
 
 
-        self.callable_list = [
-            self.on_saving_path_changed,
-            self.on_position_changed,
-            self.on_get,
-            self.on_opt, 
-            self.on_scan,
-            self.on_set_actuators, 
-            self.on_set_diagnostics,
-            self.on_update_actuator_positions
-            
-        ]
-
-
     ### helpers
-    def get_ip(self) -> str:
-        '''Helper returning the IPV4 address of the running process.'''
-        s = sock.socket(sock.AF_INET, sock.SOCK_DGRAM)
-        try:
-            s.connect(("8.8.8.8", 80))  # No traffic is actually sent
-            log.debug(f"[Server {self.name}] IPV4 address of the running process: {s.getsockname()[0]}")
-            return s.getsockname()[0]
-        except Exception as e:
-            log.warning(f"[Server {self.name}] Could not determine IP via UDP socket trick "
-                        f"(happens if offline and no default route): {e}")
-        finally:
-            s.close()
-        
-        try:
-            addr = sock.gethostbyname(sock.gethostbyname())
-            log.debug(f"[Server {self.name}] Back up method determined the IPV4 address of the running process: {addr}")
-            return addr
-        except Exception as e:
-            log.error(f"[Server {self.name}] The back up method could not demine the IPV4 address of the running process."
-                      "Returning loopback address...")
-            return "127.0.0.1"
-            
-    
-    
     def set_data(self, new_data: dict) -> None:
         '''Set a new dictionary.'''
         
@@ -223,8 +187,7 @@ class ServerLHC(threading.Thread):
             log.debug(f"[Server {self.name}] Server new dictionary setted.")
         
             d = json.dumps(dict(self._data), indent=4, sort_keys=True, default=str) # making a json
-            log.debug(f"[Server {self.name}] Current dictionary:\n" + d )
-
+            log.debug(f"[Server {self.name}] Current dictionary:\n" + d )           # printing it
 
 
     def set_name_list(self, new_names: list) -> None:

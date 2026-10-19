@@ -8,10 +8,8 @@ clients and servers.
 It acts as the single source of truth for the communication protocol,
 ensuring consistency across the project.
 '''
-from typing import Callable
-
 # protocol version
-PROTOCOL_VERSION = "0.2.1.1"
+PROTOCOL_VERSION = "0.2.2"
 
 # commands
 CMD_INFO = "INFO"
@@ -98,7 +96,6 @@ def make_info_reply(sender: str,
                     freedom: int, 
                     name: str, 
                     capabilities: list[str], 
-                    callbacks: list[Callable | None], 
                     name_list: list[str] = [], 
                     plottables_list=[]) -> dict:
     return make_message(
@@ -110,7 +107,6 @@ def make_info_reply(sender: str,
             "freedom": freedom,
             "name": name,
             "capabilities": capabilities,
-            "callbacks": callbacks,
             "name_list": name_list, 
             "plottables_list": plottables_list
         },

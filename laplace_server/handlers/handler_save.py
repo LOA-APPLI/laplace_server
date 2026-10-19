@@ -1,4 +1,10 @@
 # libraries
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from laplace_server import ServerLHC
+
 import logging
 
 # project
@@ -11,7 +17,7 @@ from ..validations import validate_payload
 log = logging.getLogger(LOGGER_NAME)
 
 
-def handle_save(server, message: dict, target: str) -> None:
+def handle_save(server: ServerLHC, message: dict, target: str) -> None:
     log.info(f"[Server {server.name}] Received: '{CMD_SAVE}' from '{target}'.")
     err = validate_payload(message, expected_keys=["path"])
     if err:
