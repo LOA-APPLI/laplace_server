@@ -50,8 +50,9 @@ Repository = "https://github.com/LOA-APPLI/laplace_server"
 Issues = "https://github.com/LOA-APPLI/laplace_server/issues"
 
 
-[tool.setuptools]
-packages = { find = {} }
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["laplace_server*"]
 
 
 [tool.setuptools.package-data]
