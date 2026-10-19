@@ -186,7 +186,7 @@ These two versions are intentionally independent.
 
 ---
 
-## Error Handling Philosophy
+## Error Handling
 
 - Validation functions return **human-readable error messages** or `None`
 - Errors are logged, not raised, for expected runtime issues
