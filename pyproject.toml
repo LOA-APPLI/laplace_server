@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "laplace-server"
-version = "0.1.9"
+version = "0.1.10"
 description = "ZMQ-based server for the LAPLACE-LHC project"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -13,11 +13,16 @@ license = "GPL-3.0-only"
 license-files = ["LICENSE"]
 
 authors = [
-  { name = "SemionTche" }
+  { name = "SemionTche" },
+  { name = "aline-vernier" }
+]
+
+maintainers = [
+    { name = "LOA-Appli" }
 ]
 
 dependencies = [
-    "pyzmq"
+    "pyzmq",
 ]
 
 keywords = ["server", "laplace", "ZMQ",
@@ -40,9 +45,9 @@ qt = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/SemionTche/laplace_server"
-Repository = "https://github.com/SemionTche/laplace_server"
-Issues = "https://github.com/SemionTche/laplace_server/issues"
+Homepage = "https://github.com/LOA-APPLI/laplace_server"
+Repository = "https://github.com/LOA-APPLI/laplace_server"
+Issues = "https://github.com/LOA-APPLI/laplace_server/issues"
 
 
 [tool.setuptools]
