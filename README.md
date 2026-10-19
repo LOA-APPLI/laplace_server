@@ -1,11 +1,11 @@
 # LAPLACE Server (LAPLACE-LHC)
 
-Server for the **LAPLACE** project.
+Server for the **LAPLACE-LHC** project.
 
 This package provides a lightweight, command-driven server running in its own
-thread, designed to exchange structured messages with clients using a defined
-protocol. It is independent from GUI frameworks, while still allowing seamless
-integration with PyQt through callback-based controllers.
+non-deamon thread, designed to exchange structured messages with clients using 
+a defined protocol. It is independent from GUI frameworks, while still allowing 
+seamless integration with PyQt through callback-based controllers.
 
 ---
 
@@ -31,7 +31,7 @@ pip install laplace-server
 Or from source (editable mode):
 
 ```bash
-git clone https://github.com/SemionTche/laplace_server.git
+git clone https://github.com/LOA-APPLi/laplace_server.git
 cd laplace_server
 pip install -e .
 ```
@@ -43,7 +43,7 @@ pip install -e .
 ### Start a server
 
 ```python
-from laplace_server.server_lhc import ServerLHC
+from laplace_server import ServerLHC
 from laplace_server.protocol import DEVICE_MOTOR
 
 server = ServerLHC(
@@ -141,7 +141,7 @@ Instead, callbacks can be connected to a `ServerController`, which emits PyQt6
 signals.
 
 ```python
-from laplace_server.server_lhc import ServerLHC
+from laplace_server import ServerLHC
 from laplace_server.server_controller import ServerController
 
 server = ServerLHC(...)
@@ -159,12 +159,16 @@ This design keeps the server independent from PyQt while remaining GUI-friendly.
 
 ```
 laplace_server/
+├── __init__.py
 ├── server_lhc.py         # Main server implementation
 ├── server_controller.py  # PyQt6 signal controller (optional)
 ├── protocol.py           # Protocol constants and helpers
 ├── validations.py        # Input and message validation utilities
-├── handlers/             # Command handlers
-└── __init__.py
+├── get_ip.py             # helper providing the ip of the process
+└── handlers/             # Command handlers
+    ├── handler_get.py        # handle the CMD_GET
+    ├── handler_info.py       # handle the CMD_INFO
+    ├── ...
 ```
 
 ---
@@ -187,8 +191,6 @@ These two versions are intentionally independent.
 - Validation functions return **human-readable error messages** or `None`
 - Errors are logged, not raised, for expected runtime issues
 - The server decides how to react (reply with error, ignore, continue)
-
-This approach is suited for long-running network services.
 
 ---
 
