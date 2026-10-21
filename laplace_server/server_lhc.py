@@ -321,7 +321,7 @@ class ServerLHC(threading.Thread):
         self.on_saving_path_changed = func
         log.debug("'on_saving_path_changed' function set.")
     
-    def set_on_position_changed(self, func: Callable[[list], None]) -> None:
+    def set_on_position_changed(self, func: Callable[[dict], None]) -> None:
         '''Set the function to use when a position is received inside a 'CMD_SET'.'''
         self.on_position_changed = func
         log.debug("'on_position_changed' function set.")
