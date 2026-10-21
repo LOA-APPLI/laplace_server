@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "laplace-server"
 version = "0.2.0"
-description = "ZMQ-based server for the LAPLACE-LHC project"
+description = "ZMQ-based server for the LAPLACE-HC project"
 readme = "README.md"
 requires-python = ">=3.10"
 

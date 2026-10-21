@@ -1,5 +1,5 @@
 '''
-Validation utilities for LAPLACE-LHC server inputs and messages.
+Validation utilities for LAPLACE-HC server inputs and messages.
 
 This module provides lightweight validation functions used to verify
 server configuration parameters and incoming protocol messages.

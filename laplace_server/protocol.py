@@ -1,5 +1,5 @@
 '''
-Protocol definitions and helpers for the LAPLACE-LHC server.
+Protocol definitions and helpers for the LAPLACE-HC server.
 
 This module defines protocol constants (commands, devices, versions) and
 helper functions used to build and interpret messages exchanged between

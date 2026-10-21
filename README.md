@@ -1,6 +1,6 @@
-# LAPLACE Server (LAPLACE-LHC)
+# LAPLACE Server (LAPLACE-HC)
 
-Server for the **LAPLACE-LHC** project.
+Server for the **LAPLACE-HC** project.
 
 This package provides a lightweight, command-driven server running in its own
 non-deamon thread, designed to exchange structured messages with clients using 
@@ -202,5 +202,5 @@ GPL-3.0
 
 ## Status
 
-This project is actively used within the LAPLACE-LHC ecosystem and is intended
+This project is actively used within the LAPLACE-HC ecosystem and is intended
 for controlled environments rather than general-purpose networking.

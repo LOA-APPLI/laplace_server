@@ -1,5 +1,5 @@
 '''
-PyQt6 signal controller for the LAPLACE-LHC server.
+PyQt6 signal controller for the LAPLACE-HC server.
 
 This module defines the ServerController class, a QObject that provides
 ready-to-use signals corresponding to server events. It allows a ServerLHC

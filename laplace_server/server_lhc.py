@@ -1,5 +1,5 @@
 '''
-ZMQ-based server implementation for the LAPLACE-LHC project.
+ZMQ-based server implementation for the LAPLACE-HC project.
 
 This module defines the ServerLHC class, which runs a command-driven server
 in its own thread. The server listens for protocol-compliant messages,
@@ -42,7 +42,7 @@ log = logging.getLogger(LOGGER_NAME)
 
 class ServerLHC(threading.Thread):
     f'''
-    Server made for the LAPLACE-LHC project.
+    Server made for the LAPLACE-HC project.
 
     The server runs in its own non-deamon thread and communicates 
     using the ZMQ REP/REQ pattern.

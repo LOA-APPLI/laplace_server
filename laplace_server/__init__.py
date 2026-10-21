@@ -1,5 +1,5 @@
 '''
-LAPLACE-LHC server package.
+LAPLACE-HC server package.
 
 Provides a ZMQ-based server, protocol definitions, 
 validation utilities, handlers, and PyQt6 signal controller.
